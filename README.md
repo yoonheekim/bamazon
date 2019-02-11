@@ -39,7 +39,8 @@
     * Once the update goes through, show the customer the total cost of their purchase.
 * Price of the product multiplied by the quantity purchased is added to the product's `product_sales` column.
     ```
-
+* Screenshot
+![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonCustomer.jpg)
 
 ## 2. Manager View
 > Node application called `bamazonManager.js`
@@ -51,21 +52,28 @@
     * Add to Inventory
     * Add New Product
     ```
+    * Screenshot
+    ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonManagerOptions.jpg)
     1. `View Products for Sale`
         * The app lists every available item: the item IDs, names, prices, and quantities.
         * Screenshot
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonManager1.jpg)
 
     2. `View Low Inventory`
         * It lists all items with an inventory count lower than five.
         * Screenshot
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonManager2.jpg)
 
     3. `Add to Inventory`
         * The app displays a prompt that will let the manager "add more" of any item currently in the store.
         * Screenshot
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonManager3-1.jpg)
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonManager3-2.jpg)
 
     4. `Add New Product`
         * It allows the manager to add a completely new product to the store.
         * Screenshot
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonManager4.jpg)
 
 
 ## 3. Supervisor View
@@ -76,11 +84,15 @@
     * View Product Sales by Department
     * Create New Department
     ```
+    * Screenshot
+    ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonSupervisorOprions.jpg)
     1. `View Product Sales by Department`
         * The app displays a summarized table in their terminal/bash window
         * The `total_profit` column is calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` is not stored in any database. (using GROUP BY, JOINS)
         * Screenshot
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonSupervisor1.jpg)
 
     2. `Create New Department`
         * It allows the Supervisor to add a completely new department to the store.
         * Screenshot
+        ![alt text](https://raw.githubusercontent.com/yoonheekim/bamazon/master/images/bamazonSupervisor2.jpg)
