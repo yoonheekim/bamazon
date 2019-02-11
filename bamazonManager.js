@@ -1,5 +1,6 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+var cTable = require('console.table');
 
 var connection = mysql.createConnection({
     host : "localhost",
@@ -17,7 +18,8 @@ function options(){
             choices : ["View Products for Sale",
                        "View Low Inventory",
                        "Add to Inventory",
-                       "Add New Product"]
+                       "Add New Product",
+                       "Quit"]
         }
     ])
     .then(function(answer){
@@ -30,6 +32,8 @@ function options(){
                 return addInventory();
             case "Add New Product":
                 return addNewProduct();
+            case "Quit":
+                connection.end();
         }
     });
 }
@@ -42,17 +46,10 @@ function viewProducts(){
         console.log("\n-----------------------------------------------------");
         console.log("View all items");
         console.log("-----------------------------------------------------\n");
-        for(var i=0; i<res.length; i++){
-            console.log("Item ID: "+res[i].item_id+
-            " || Name : "+res[i].product_name+
-            " || Department : "+res[i].department_name+
-            " || Price : "+res[i].price+
-            " || Quantity : "+res[i].stock_quantity);
-        }
+        console.table(res);
         console.log("\n");
+        options();
     });
-    connection.end();s
-    //options();
     
 };
 function viewLowInventory(){
@@ -62,17 +59,11 @@ function viewLowInventory(){
         console.log("\n-----------------------------------------------------");
         console.log("Items with an inventory count lower than five");
         console.log("-----------------------------------------------------\n");
-        for(var i=0; i<res.length; i++){
-            console.log("Item ID: "+res[i].item_id+
-            " || Name : "+res[i].product_name+
-            " || Department : "+res[i].department_name+
-            " || Price : "+res[i].price+
-            " || Quantity : "+res[i].stock_quantity);
-        }
+        console.table(res);
         console.log("\n");
+        options();
     });
-    connection.end();
-    //options();
+
 };
 function addInventory(){
     connection.query("SELECT * FROM products", function(err, res){
@@ -124,8 +115,9 @@ function addInventory(){
                      console.log("\n-----------------------------------------------------");
                      console.log("added "+answer.quantity+" "+answer.item+"(s) to the inventory");
                      console.log("-----------------------------------------------------\n");
+                     options();
                  });
-                 connection.end();
+
             });
          });
     });
@@ -144,11 +136,23 @@ function addNewProduct(){
         },
         {
             name: "price",
-            message: "Input the price of the item added"
+            message: "Input the price of the item added",
+            validate: function(value) {
+				if (isNaN(value) === false) {
+					return true;
+				}
+				return false;
+			}
         },
         {
             name: "quantity",
-            message: "Input how many quantity of the item added"
+            message: "Input how many quantity of the item added",
+            validate: function(value) {
+				if (isNaN(value) === false) {
+					return true;
+				}
+				return false;
+			}
         }
     ])
     .then(function(answer){
@@ -165,10 +169,9 @@ function addNewProduct(){
             console.log("added new item : "+answer.product+", "+answer.department+
             ", "+answer.price+"($), "+answer.quantity+"(qty)");
             console.log("-----------------------------------------------------\n");
-                
+            options();
         });
-        connection.end();
-        //options();
+
     })
 };
 

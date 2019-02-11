@@ -25,11 +25,11 @@ VALUES("milk", "Food", 1.88, 10, 400),
 ("apple", "Food", 0.99, 100, 600),
 ("toilet paper", "Health & Household", 25.55, 8, 150),
 ("notebooks", "Office Product", 8.99, 10, 400),
-("tumbler", "Kitchen & Dining", 18.00, 8, 180),
+("tumbler", "Kitchen & Dining", 18.00, 4, 180),
 ("sunglasses", "Clothing", 33.99, 5, 600),
 ("i-pad", "Electronics", 329.99, 10, 3000),
 ("yoga pants", "Clothing", 14.20, 3, 250),
-("coffee maker", "Kitchen & Dining", 47.25, 7, 500),
+("coffee maker", "Kitchen & Dining", 47.25, 2, 500),
 ("vitamin complex", "Health & Household", 12.31, 6, 600);
 
 INSERT INTO departments(department_name, over_head_costs)

@@ -16,7 +16,8 @@ function options(){
             message : "Select one of the menu options",
             type : "list",
             choices : ["View Product Sales by Department",
-                       "Create New Department"]
+                       "Create New Department", 
+                       "Quit"]
         }
     ])
     .then(function(answer){
@@ -25,6 +26,8 @@ function options(){
                 return viewProductsSales();
             case "Create New Department":
                 return createNewDepartment();
+            case "Quit":
+                connection.end();
         }
     });
 }
@@ -36,14 +39,46 @@ function viewProductsSales(){
     "ON d1.department_name = p1.department_name "+
     "group by p1.department_name;", function(err, res){
         if(err) throw err;
-
+        console.log("\n----------------------------------------------------------------------------------------------------------\n");
         console.table(res);
-   
+        console.log("----------------------------------------------------------------------------------------------------------\n");
+        options();
     });
+    
 
 };
 function createNewDepartment(){
-
+    inquirer.prompt([
+        {
+            name: "department",
+            message: "Input new department to add"
+        },
+        {
+            name: "overHeadCost",
+            message: "Input over head cost of new department",
+            validate: function(value) {
+				if (isNaN(value) === false) {
+					return true;
+				}
+				return false;
+			}
+        }
+    ])
+    .then(function(answer){
+        connection.query("INSERT INTO departments SET ?"
+        ,[{
+            department_name: answer.department,
+            over_head_costs: answer.overHeadCost
+        }]
+        ,function(err, res){
+            if(err) throw err;
+            console.log("\n-----------------------------------------------------");
+            console.log("added new department : "+answer.department+
+            ", Over head cost : "+answer.overHeadCost);
+            console.log("-----------------------------------------------------\n");
+            options(); 
+        });
+    })
 }
 
 options();

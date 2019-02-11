@@ -3,7 +3,7 @@
 ## Overview
 1. Amazon-like storefront with the MySQL skills.
 2. The app takes in orders from customers and deplete stock from the store's inventory.
-3. app can track product sales across the store's departments and then provide a summary of the highest-grossing departments in the store.
+3. App can track product sales across the store's departments and then provide a summary of the highest-grossing departments in the store.
 
 ## Technologies
 > Node.js, MySQL
