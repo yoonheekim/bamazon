@@ -48,7 +48,7 @@ function ask(){
 };
 
 function checkQuantity(id, amount){
-    connection.query("select stock_quantity, price from products where ?",
+    connection.query("select stock_quantity, price, product_sales from products where ?",
     {
         item_id : id
     }
@@ -57,7 +57,9 @@ function checkQuantity(id, amount){
         console.log(res);
         if(res[0].stock_quantity>=amount){
             var stocks = res[0].stock_quantity-amount;
-            updateStocksSales(id, stocks);
+            var totalCost = amount*res[0].price
+            var totslsales = res[0].product_sales;
+            updateStocksSales(id, stocks, totalCost, totslsales);
         } else {
             console.log("Insufficient quantity!");
         };
@@ -65,11 +67,11 @@ function checkQuantity(id, amount){
     });
 }
 
-function updateStocksSales(id, stocks){
+function updateStocksSales(id, stocks, totalCost, totslsales){
     connection.query("UPDATE products SET ? WHERE ?",
     [{
         stock_quantity: stocks,
-        product_sales: amount*res[0].price
+        product_sales: totslsales
     }, 
     {
         item_id: id
@@ -78,7 +80,7 @@ function updateStocksSales(id, stocks){
         if(err) throw err;
         console.log("\n-----------------------------------------------------");
         console.log("Your order has been placed ! ");
-        console.log("Total cost : "+amount*res[0].price);
+        console.log("Total cost : "+totalCost);
         console.log("Product Sales is updated ! ");
         console.log("-----------------------------------------------------\n");
     });

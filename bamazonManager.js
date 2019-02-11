@@ -8,30 +8,32 @@ var connection = mysql.createConnection({
     password : "001059jyh",
     database : "bamazon"
 });
+function options(){
+    inquirer.prompt([
+        {
+            name : "menu",
+            message : "Select one of the menu options",
+            type : "list",
+            choices : ["View Products for Sale",
+                       "View Low Inventory",
+                       "Add to Inventory",
+                       "Add New Product"]
+        }
+    ])
+    .then(function(answer){
+        switch(answer.menu){
+            case "View Products for Sale":
+                return viewProducts();
+            case "View Low Inventory":
+                return viewLowInventory();
+            case "Add to Inventory":
+                return addInventory();
+            case "Add New Product":
+                return addNewProduct();
+        }
+    });
+}
 
-inquirer.prompt([
-    {
-        name : "menu",
-        message : "Select one of the menu options",
-        type : "list",
-        choices : ["View Products for Sale",
-                   "View Low Inventory",
-                   "Add to Inventory",
-                   "Add New Product"]
-    }
-])
-.then(function(answer){
-    switch(answer.menu){
-        case "View Products for Sale":
-            return viewProducts();
-        case "View Low Inventory":
-            return viewLowInventory();
-        case "Add to Inventory":
-            return addInventory();
-        case "Add New Product":
-            return addNewProduct();
-    }
-})
 
 function viewProducts(){
     connection.query("select * from products"
@@ -49,7 +51,8 @@ function viewProducts(){
         }
         console.log("\n");
     });
-    connection.end();
+    connection.end();s
+    //options();
     
 };
 function viewLowInventory(){
@@ -69,6 +72,7 @@ function viewLowInventory(){
         console.log("\n");
     });
     connection.end();
+    //options();
 };
 function addInventory(){
     connection.query("SELECT * FROM products", function(err, res){
@@ -100,28 +104,72 @@ function addInventory(){
             }
         ])
         .then(function(answer){
-           connection.query("SELECT * FROM products", function(err, res){
-               if(err) throw err;
-               console.log(res[0].stock_quantity);
-               console.log(answer.quantity);
-               console.log("---------------------------"+(parseInt(res[0].stock_quantity)+parseInt(answer.quantity)));
-                connection.query("UPDATE products SET ? WHERE?",
-                [{
-                    stock_quantity: (parseInt(res[0].stock_quantity)+parseInt(answer.quantity))
-                },{
-                    product_name: answer.item
-                }]
-                ,function(err, res){
-                    if(err) throw err;
-                    console.log("\n-----------------------------------------------------");
-                    console.log("added "+answer.quantity+" "+answer.item+"(s) to the inventory");
-                    console.log("-----------------------------------------------------\n");
-                })
-           });
-        });
+            connection.query("SELECT * FROM products WHERE ?"
+            ,[{
+                product_name: answer.item
+            }]
+            , function(err, res){
+                if(err) throw err;
+                // console.log(res[0].stock_quantity);
+                // console.log(answer.quantity);
+                // console.log("---------------------------"+(parseInt(res[0].stock_quantity)+parseInt(answer.quantity)));
+                 connection.query("UPDATE products SET ? WHERE?",
+                 [{
+                     stock_quantity: (parseInt(res[0].stock_quantity)+parseInt(answer.quantity))
+                 },{
+                     product_name: answer.item
+                 }]
+                 ,function(err, res){
+                     if(err) throw err;
+                     console.log("\n-----------------------------------------------------");
+                     console.log("added "+answer.quantity+" "+answer.item+"(s) to the inventory");
+                     console.log("-----------------------------------------------------\n");
+                 });
+                 connection.end();
+            });
+         });
     });
+    //options();
     
 };
 function addNewProduct(){
-    
-}
+    inquirer.prompt([
+        {
+            name: "product",
+            message: "Input an item to add"
+        },
+        {
+            name: "department",
+            message: "Input department of the item added"
+        },
+        {
+            name: "price",
+            message: "Input the price of the item added"
+        },
+        {
+            name: "quantity",
+            message: "Input how many quantity of the item added"
+        }
+    ])
+    .then(function(answer){
+        connection.query("INSERT INTO products SET ?"
+        ,[{
+            product_name: answer.product,
+            department_name: answer.department,
+            price: answer.price,
+            stock_quantity: answer.quantity
+        }]
+        ,function(err, res){
+            if(err) throw err;
+            console.log("\n-----------------------------------------------------");
+            console.log("added new item : "+answer.product+", "+answer.department+
+            ", "+answer.price+"($), "+answer.quantity+"(qty)");
+            console.log("-----------------------------------------------------\n");
+                
+        });
+        connection.end();
+        //options();
+    })
+};
+
+options();
