@@ -18,7 +18,7 @@ connection.connect(function(err){
 });
 
 function readItems(){
-    var query = connection.query("select * from products"
+    connection.query("select * from products"
     , function(err, res){
         if(err) throw err;
         for(var i=0; i<res.length; i++){
@@ -29,7 +29,6 @@ function readItems(){
             " || Quantity : "+res[i].stock_quantity);
         }
     });
-    //console.log(query.sql);
     ask();
 };
 
@@ -58,23 +57,29 @@ function checkQuantity(id, amount){
         console.log(res);
         if(res[0].stock_quantity>=amount){
             var stocks = res[0].stock_quantity-amount;
-            connection.query("UPDATE products SET ? WHERE ?",
-            [{
-                stock_quantity: stocks
-            }, 
-            {
-                item_id: id
-            }, function(err, res){
-                if(err) throw err;
-                console.log(res);
-            }], function(err){
-                if(err) throw err;
-                console.log("Your order has been placed ! ");
-                console.log("Total cost : "+amount*res[0].price);
-            });
+            updateStocksSales(id, stocks);
         } else {
             console.log("Insufficient quantity!");
-        }
+        };
+
     });
-    //console.log(query.sql);
 }
+
+function updateStocksSales(id, stocks){
+    connection.query("UPDATE products SET ? WHERE ?",
+    [{
+        stock_quantity: stocks,
+        product_sales: amount*res[0].price
+    }, 
+    {
+        item_id: id
+    }]
+    , function(err, res){
+        if(err) throw err;
+        console.log("\n-----------------------------------------------------");
+        console.log("Your order has been placed ! ");
+        console.log("Total cost : "+amount*res[0].price);
+        console.log("Product Sales is updated ! ");
+        console.log("-----------------------------------------------------\n");
+    });
+};
